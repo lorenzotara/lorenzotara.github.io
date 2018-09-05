@@ -1,0 +1,225 @@
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script type="text/javascript">
+var id = 1;
+// var id = ${index};
+var loaded = false;
+$(document).ready(function () {
+	/*$.getJSON("https://dariopavllo.github.io/mturk/" + id + ".json").done(function (data) {*/
+	$.getJSON("https://lorenzotara.github.io/docs/" + id + ".json").done(function (data) {
+
+		var form = document.getElementById("content");
+		var q = 0;
+		data.forEach(x => {
+			var div = document.createElement("div");
+			var p = document.createElement("p");
+			p.innerHTML = x.q;
+
+			var sel = document.createElement("div");
+			sel.className = "sel";
+			// sel.innerHTML = "Is this a direct quotation from <strong>" + x.s + "</strong>? " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"1\" /><span class=\"yes\">Yes</span></label>" + "<label for=\"q" + q + "_0\"><input type=\"radio\" id=\"q" + q + "_0\" name=\"q" + q + "\" value=\"0\" /><span class=\"no\">No</span></label>";
+			var start_question = "Is this a direct or indirect quotation from: (only one answer is accepted)";
+			var temp_var =  "";
+			for (i = 0; i < x.sa.length; i++) {
+			    temp_var += "<p> <strong>" + x.sa[i] + "</strong> " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"1\" /><span class=\"yes\">Yes</span></label>";
+            }
+            temp_var += "<p> <strong> None of the above </strong> " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"1\" /><span class=\"yes\">Yes</span></label>";
+			// sel.innerHTML = "Is this a direct or indirect quotation from <p> <strong>" + x.sa[0] + "</strong>? " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"1\" /><span class=\"yes\">Yes</span></label>" + "<label for=\"q" + q + "_0\"><input type=\"radio\" id=\"q" + q + "_0\" name=\"q" + q + "\" value=\"0\" /><span class=\"no\">No</span></label> </p>";
+			sel.innerHTML = start_question + temp_var;
+
+			div.appendChild(p);
+			div.appendChild(sel);
+			form.appendChild(div);
+			q++;
+		});
+
+		loaded = true;
+	}).fail(function () {
+		alert('Error: unable to load data');
+	});
+
+	$("#expand").click(function () {
+		$('#expander').toggle("fast");
+	});
+
+	document.getElementById('submitButton').setAttribute('onclick', 'return process()');
+	
+	var visited = $.cookie("visited");
+	if (visited != null) {
+		$('#expander').toggle();
+	} else {
+		var date = new Date();
+		var minutes = 5;
+		date.setTime(date.getTime() + (minutes * 60 * 1000));
+		$.cookie('visited', 'yes', { expires: date, path: '/' });
+	}
+});
+
+function process() {
+	if (!loaded) {
+		return false;
+	}
+	if ($('.sel:not(:has(:radio:checked))').length) {
+		alert("You must answer all the questions");
+		return false;
+	}
+	return true;
+}
+</script>
+<style type="text/css">
+	q {
+		font-weight: bold;
+		background-color: #ddd;
+	}
+	
+	form {
+		font-family: Trebuchet MS, Helvetica, Verdana;
+	}
+	
+	ul {
+	  font-family: Trebuchet MS, Helvetica, Verdana;
+	  border:2px solid #CC3333;
+	}
+	
+	ul.red {
+	  background:#FFCCCC;
+	}
+	
+	.emph {
+	  font-weight:bold;
+	}
+	.emph2 {
+	  font-weight:bold;
+	  color:#CC3333;
+	}
+	
+	.yes {
+		color:#33AA33;
+		font-weight: bold;
+	}
+	
+	.no {
+		color:#AA3333;
+		font-weight: bold;
+	}
+	
+	li {
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	
+	#expand {
+		display:inline-block;
+		cursor: pointer;
+		border: 2px solid #000;
+		padding: 5px;
+		font-weight: bold;
+		background: #eee;
+	}
+	
+	#expander {
+		display: block;
+	}
+	
+	#content > div {
+		border: 1px solid #000;
+		margin: 5px;
+		padding: 5px;
+		border-radius: 10px;
+	}
+	
+	.sel {
+		color: #36F;
+	}
+	
+	label {
+		border: 1px solid #666;
+		border-radius: 5px;
+		margin: 2px;
+		padding: 2px 6px;
+	}
+	
+	#submitButton {
+  cursor:pointer; /*forces the cursor to change to a hand when the button is hovered*/
+  padding:5px 25px; /*add some padding to the inside of the button*/
+  background:#FF9933; /*the colour of the button*/
+  border:1px solid #FF9900; /*required or the default border for the browser will appear*/
+  /*give the button curved corners, alter the size as required*/
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  /*give the button a drop shadow*/
+  -webkit-box-shadow: 0 0 4px rgba(0,0,0, .75);
+  -moz-box-shadow: 0 0 4px rgba(0,0,0, .75);
+  box-shadow: 0 0 4px rgba(0,0,0, .75);
+  /*style the text*/
+  color:#f3f3f3;
+  font-size:1.1em;
+}
+</style>
+<ul class="red">
+  <!--b style="color:#CC3333; background:yellow">Instructions:</b-->
+  <li>Below, you are shown a set of potential quotations that have been extracted from news articles.</li>
+  <li><span class="emph">Your task:</span> <span class="emph2">Decide whether the highlighted quotation has been attributed to the correct person</span>.</li>
+  <li>You should mark as <span class="yes">Yes</span> only quotations that are directly attributed to the speaker, like "John said", but not "he said".</li>
+  <li>There is no need to search the web. You should answer according to the information provided.</li>
+  <li>Each HIT consists of at most <span class="emph">10</span> quotations.</li>
+  <li>To ensure you make a best effort, one of the tasks is a <span class="emph">test question</span> for which the right choice is obvious. You will be paid for the HIT if you answer the test question correctly. If you answer randomly to many HITs, we may reject all your HITs.</li>
+  <li>Some questions may be tricky (and the reward for these HITs has been increased to reflect this fact). We kindly ask you to pay attention and to refer to the instructions below.</li>
+</ul>
+<ul>
+  <span class="emph">Here are some examples that explain how you should answer:</span><br />
+  <span id="expand">Click here to expand</span><br />
+  <div id="expander">
+  <!--b style="color:#CC3333; background:yellow">Instructions:</b-->
+	<li>
+		<q>Hi everybody,</q> said John Doe.<br />
+		Is this a direct quotation from <strong>John Doe</strong>? <span class="yes">Yes</span>
+	</li>
+	<li>
+		<q>Hi everybody,</q> said John Doe.<br />
+		Is this a direct quotation from <strong>Mark Johnson</strong>? <span class="no">No</span>, because the quotation has been attributed to the wrong person.
+	</li>
+	<li>
+		<q>Hi everybody,</q> said John.<br />
+		Is this a direct quotation from <strong>John</strong>? <span class="yes">Yes</span>. If the full name cannot be seen in the context, the first or last name is fine.
+	</li>
+	<li>
+		<q>Hi everybody,</q> said John Doe.<br />
+		Is this a direct quotation from <strong>John</strong>? <span class="no">No</span>, because the quotation has not been attributed to the full name of the person.<br />
+		Generally speaking, you should answer <span class="yes">Yes</span> only if the name has been extracted properly.
+	</li>
+	<li>
+		John Doe was walking around the street. <q>Hi everybody,</q> said Doe.<br />
+		Is this a direct quotation from <strong>John Doe</strong>? <span class="yes">Yes</span>, because the full name of the person has been identified properly (although the last part is "said Doe").<br />
+	</li>
+	<li>
+		<q>Hi everybody,</q> said Mr. John Doe.<br />
+		Is this a direct quotation from <strong>John Doe</strong>? <span class="yes">Yes</span>
+	</li>
+	<li>
+		<q>Hi everybody,</q> said Mr. Doe.<br />
+		Is this a direct quotation from <strong>Doe</strong>? <span class="yes">Yes</span>
+	</li>
+	<li>
+		John Doe was walking around the street. <q>Hi everybody,</q> he said.<br />
+		Is this a direct quotation from <strong>John Doe</strong>? <span class="no">No</span>. Although the speaker is clear from the context, the quotation is not direct ("he said").
+	</li>
+	<li>
+		"Hi everybody," John Doe said. <q>Hello,</q> Mark replied.<br />
+		Is this a direct quotation from <strong>John Doe</strong>? <span class="no">No</span>, because the highlighted quotation is not from John Doe, but Mark.<br />
+		<span class="emph">Remember:</span> you should consider only the highlighted quotation.
+	</li>
+	<li>
+		John Doe watched <q>The Simpsons</q> yesterday.<br />
+		Is this a direct quotation from <strong>John Doe</strong>? <span class="no">No</span>, because this is not a quotation at all.
+	</li>
+	<li><span class="emph2">If you are in doubt, answer no.</span></li>
+	</div>
+</ul>
+<input name="h" style="display:none" />
+<form action="#">
+	<div id="content">
+	</div>
+	<input type="submit" id="submitButton" />
+</form>
