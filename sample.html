@@ -1,7 +1,7 @@
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script type="text/javascript">
-var id = 1;
+var id = 0;
 // var id = ${index};
 var loaded = false;
 $(document).ready(function () {
@@ -18,12 +18,13 @@ $(document).ready(function () {
 			var sel = document.createElement("div");
 			sel.className = "sel";
 			// sel.innerHTML = "Is this a direct quotation from <strong>" + x.s + "</strong>? " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"1\" /><span class=\"yes\">Yes</span></label>" + "<label for=\"q" + q + "_0\"><input type=\"radio\" id=\"q" + q + "_0\" name=\"q" + q + "\" value=\"0\" /><span class=\"no\">No</span></label>";
-			var start_question = "Is this a direct or indirect quotation from: (only one answer is accepted)";
+			var start_question = "Is this a direct or indirect quotation from: (only one answer is accepted) <p>";
 			var temp_var =  "";
 			for (i = 0; i < x.sa.length; i++) {
-			    temp_var += "<p> <strong>" + x.sa[i] + "</strong> " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value="+ x.sa + "/><span class=\"yes\">Yes</span></label>";
+			    /*temp_var += "<p> <strong>" + x.sa[i] + "</strong> " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value="+ x.sa + "/><span class=\"yes\">x.sa</span></label>";*/
+                temp_var += "<input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value="+ x.sa[i] + "/><span class=\"yes\"> " + x.sa[i] + " </span></label>";
             }
-            temp_var += "<p> <strong> None of the above </strong> " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"-1\" /><span class=\"yes\">Yes</span></label>";
+            temp_var += "<p></p><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"-1\" /><span class=\"no\"> None of the above</span></label>";
 			// sel.innerHTML = "Is this a direct or indirect quotation from <p> <strong>" + x.sa[0] + "</strong>? " + "<label for=\"q" + q + "_1\"><input type=\"radio\" id=\"q" + q + "_1\" name=\"q" + q + "\" value=\"1\" /><span class=\"yes\">Yes</span></label>" + "<label for=\"q" + q + "_0\"><input type=\"radio\" id=\"q" + q + "_0\" name=\"q" + q + "\" value=\"0\" /><span class=\"no\">No</span></label> </p>";
 			sel.innerHTML = start_question + temp_var;
 
